@@ -125,36 +125,22 @@ endmodule
 
 4:1 MUX Structural Implementation
 
-// mux2_to_1.v
-module mux2_to_1 (
-    input wire A,
-    input wire B,
-    input wire S,
-    output wire Y
-);
-    assign Y = S ? B : A;
+module mux2_to_1 (a,s,out);
+input s,[1:0]a;
+output out;
+    assign out = s ? a[1] : a[0];
 endmodule
-
-
-// mux4_to_1_structural.v
-module mux4_to_1_structural (
-    input wire A,
-    input wire B,
-    input wire C,
-    input wire D,
-    input wire S0,
-    input wire S1,
-    output wire Y
-);
+module mux4_to_1_structural (a,s,out);
+input [3:0]a;
+input [1:0]s;
+output out;
     wire mux_low, mux_high;
-
-    // Instantiate two 2:1 MUXes
-    mux2_to_1 mux0 (.A(A), .B(B), .S(S0), .Y(mux_low));
-    mux2_to_1 mux1 (.A(C), .B(D), .S(S0), .Y(mux_high));
-
-    // Instantiate the final 2:1 MUX
-    mux2_to_1 mux_final (.A(mux_low), .B(mux_high), .S(S1), .Y(Y));
+    mux2_to_1 mux0 (.a[0](a[0]), .a[1](a[1]), .s(s[0]), .out(mux_low));
+    mux2_to_1 mux1 (.a[0](a[2]), .a[1](a[3]), .s(s[0]), .out(mux_high));
+    mux2_to_1 mux_final (.a[0](mux_low), .a[1](mux_high), .s(s[1]), .out(out));
 endmodule
+
+OUTPUT: ![image](https://github.com/user-attachments/assets/3dd64fd0-0e6e-41bc-be72-6e715faebb3b)
 
 Testbench Implementation
 
